@@ -1,18 +1,19 @@
 ﻿/** 
  * @file: paginator plugin
  * @author: xucaiyu
+ * @email: 569455187@qq.com
  */
 // paginator plugin
 function Paginator( options ){
 	var Default = {
 		current: 1, 		// 当前页
 		total: 0, 			// 总页数
-		count: false, 		// 总条数
+		count: 0, 			// 总条数
 		startPage: 2, 		// 开始显示条数 head page
 		endPage: 1,   		// 结束显示条数 end page
 		numPage: 5,   		// 最多显示条数 show total page
-		prev: '‹',		// 上一页文本
-		next: '›',		// 下一页文本
+		prev: '‹',			// 上一页文本
+		next: '›',			// 下一页文本
 		first: 'First',		// 第一页文本
 		last: 'Last',		// 最后一页文本
 		numShow: true,		// 是否显示页码部分
@@ -27,10 +28,6 @@ function Paginator( options ){
 		autoLink: false,	// auto reload page
 		linkTo: function( page ){	// paginator
 			return '#';
-		},
-		formLinkTo:{
-			action: '',
-			name: 'page'
 		},
 		bindFun: function(){}
 	}
@@ -57,7 +54,9 @@ function Paginator( options ){
 				html;
 
 			html = '<div class="xcy-pages-warp">';
+			html += '<div class="xcy-pages-num">';
 			html += that._drawLink( current, total );
+			html += '</div>';
 			html += that._drawCount( current, total, count );
 			if( skipShow ){
 				html += that._drawSkip( current );
@@ -132,12 +131,10 @@ function Paginator( options ){
 				html = '',
 				split = '<span class="xcy-pages-split">...</span>';  
 
-			html += '<div class="xcy-pages-num">';
-
 			// first
 			if( current > 1 && options.firstShow ){
 				html += '<a href="javascript:;" class="xcy-first">'+ options.first +'</a>';
-			}else{
+			}else if( options.firstShow !== false ){
 				html += '<span class="xcy-first">'+ options.first +'</span>';
 			}
 
@@ -202,11 +199,9 @@ function Paginator( options ){
 			// last
 			if( current < total && options.lastShow ){
 				html += '<a href="javascript:;" class="xcy-last">'+ options.last +'</a>';
-			}else{
+			}else if( options.lastShow !== false ){
 				html += '<span class="xcy-last">'+ options.last +'</span>';
 			}
-
-			html += '</div>';
 
 			return html;
 		},
