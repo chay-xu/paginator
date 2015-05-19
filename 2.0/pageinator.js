@@ -24,7 +24,7 @@
 			fastShow: true, 	// 是否一直显示第一或最后按钮
 			skipShow: false,	// 是否显示跳转
 			selector: '',		// 容器 container
-			autoInit: false,	// 是否自动初始化
+			autoRefresh: false,	// 是否自动初始化
 			autoLink: false,	// auto reload page
 			linkTo: function( page ){	// paginator
 				return '#';
@@ -48,12 +48,12 @@
 			version: '2.0',
 			_init: function(){
 				var that = this,
-					options = that.options,
-					autoLink = options.autoLink,
-					skipShow = options.skipShow,
-					total = Number( options.total ),
-					current = Number( options.current ),
-					count = Number( options.count ),
+					opts = that.options,
+					autoLink = opts.autoLink,
+					skipShow = opts.skipShow,
+					total = Number( opts.total ),
+					current = Number( opts.current ),
+					count = Number( opts.count ),
 					html;
 
 				html = '<div class="xcy-pages-warp">';
@@ -73,7 +73,8 @@
 					// ajax
 					// 异步加载
 					$( '.xcy-pages-warp', that.$selector ).delegate( 'a', 'click', function( e ){
-						var className = $( this ).attr( 'class' );
+						var className = $( this ).attr( 'class' ),
+							current = opts.current;
 
 						if( className == 'xcy-next' ){
 							current++;
@@ -82,16 +83,14 @@
 						}else if( className == 'xcy-first' ){
 							current = 1;
 						}else if( className == 'xcy-last' ){
-							current = options.total;
+							current = opts.total;
 						}else{
 							current = Number( $( this ).attr( 'sh-page' ) );
 						}
 
-						if( current > options.total ) return;
-						// refresh and bind event
-						that.refresh({ current: current })
+						that._handle( current, opts.total, opts.count )
 
-						e.preventDefault();
+						return false;
 					})
 					// skip form submit
 					// submit button 异步加载
@@ -99,9 +98,7 @@
 						$( '.xcy-pages-form', that.$selector ).bind( 'submit', function(){
 							current = $( '.xcy-skip-input', that.$selector ).val();
 
-							if( current > options.total ) return false;
-
-							that.refresh({ current: current })
+							that._handle( current, opts.total, opts.count )
 
 							return false;
 						})
@@ -116,9 +113,9 @@
 
 						if( current > total ) return false;
 						// return submit boolen
-						bo = options.bindFun( current );
+						bo = opts.bindFun( current );
 
-						$( this ).attr( 'action', options.linkTo( current ) );
+						$( this ).attr( 'action', opts.linkTo( current ) );
 
 						return bo ? true : bo;
 					})
@@ -127,11 +124,11 @@
 			},
 			_drawLink: function( current, total ){
 				var that = this,
-					options= that.options,
-					startPage = Number( options.startPage ),
-					endPage = Number( options.endPage ),
+					opts= that.options,
+					startPage = Number( opts.startPage ),
+					endPage = Number( opts.endPage ),
 					NewEndPage =  endPage > 0 ? endPage - 1 : -1,
-					numPage = Number( options.numPage ),
+					numPage = Number( opts.numPage ),
 					minNumPage = numPage - 1,
 					startNumPage = parseInt( ( numPage - 1 )/2 ),
 					endNumPage = numPage - startNumPage - 1,
@@ -139,20 +136,20 @@
 					split = '<span class="xcy-pages-split">...</span>';  
 
 				// first
-				if( current > 1 && options.fastShow ){
-					html += '<a href="javascript:;" class="xcy-first">'+ options.first +'</a>';
-				}else if( options.fastShow !== false ){
-					html += '<span class="xcy-first">'+ options.first +'</span>';
+				if( current > 1 && opts.fastShow ){
+					html += '<a href="javascript:;" class="xcy-first">'+ opts.first +'</a>';
+				}else if( opts.fastShow !== false ){
+					html += '<span class="xcy-first">'+ opts.first +'</span>';
 				}
 
 				// prev
-				if( current > 1 && options.arrowShow ){
-					html += '<a href="javascript:;" class="xcy-prev">'+ options.prev +'</a>';
-				}else if( options.arrowShow !== false ){
-					html += '<span class="xcy-prev">'+ options.prev +'</span>';
+				if( current > 1 && opts.arrowShow ){
+					html += '<a href="javascript:;" class="xcy-prev">'+ opts.prev +'</a>';
+				}else if( opts.arrowShow !== false ){
+					html += '<span class="xcy-prev">'+ opts.prev +'</span>';
 				}
 
-				if( options.numShow ){
+				if( opts.numShow ){
 					if( current - numPage >= 0 && total - current >= minNumPage ){
 						// current is middle
 						// start
@@ -197,17 +194,17 @@
 				}
 
 				// next
-				if( current < total  && options.arrowShow ){
-					html += '<a href="javascript:;" class="xcy-next">'+ options.next +'</a>';
-				}else if( options.arrowShow !== false ){
-					html += '<span class="xcy-next">'+ options.next +'</span>';
+				if( current < total  && opts.arrowShow ){
+					html += '<a href="javascript:;" class="xcy-next">'+ opts.next +'</a>';
+				}else if( opts.arrowShow !== false ){
+					html += '<span class="xcy-next">'+ opts.next +'</span>';
 				}
 
 				// last
-				if( current < total && options.fastShow ){
-					html += '<a href="javascript:;" class="xcy-last">'+ options.last +'</a>';
-				}else if( options.fastShow !== false ){
-					html += '<span class="xcy-last">'+ options.last +'</span>';
+				if( current < total && opts.fastShow ){
+					html += '<a href="javascript:;" class="xcy-last">'+ opts.last +'</a>';
+				}else if( opts.fastShow !== false ){
+					html += '<span class="xcy-last">'+ opts.last +'</span>';
 				}
 
 				return html;
@@ -229,8 +226,7 @@
 			},
 			_drawSkip: function( current, total ){
 				var that = this,
-					options= that.options,
-					skipShow = options.skipShow,
+					skipShow = that.options.skipShow,
 					current = current + 1 > total ? current : current + 1,
 					html = '';
 
@@ -257,16 +253,29 @@
 
 				return html;
 			},
+			_handle: function( current, total, count ){
+				var that = this,
+					opts = that.options;
+
+				if( current > 0 && current <= opts.total ){
+					// refresh and bind event
+					if( opts.autoRefresh )
+						that.refresh({ current: current })
+				}
+				// page bind event
+				opts.bindFun.call(that, current, total, count );
+			},
 			refresh: function( options ){
 				var that = this,
-					skipShow = that.options.skipShow,
+					opts = $.extend( that.options, options || {}),
+					skipShow = opts.skipShow,
 					current, subCurrent, total, count;
 
-				$.extend( that.options, options || {});
+				// $.extend( opts, options || {});
 
-				current = Number( that.options.current );
-				total = Number( that.options.total );
-				count = Number( that.options.count );
+				current = Number( opts.current );
+				total = Number( opts.total );
+				count = Number( opts.count );
 
 				$( '.xcy-pages-num', that.$selector ).html( that._drawLink( current, total ) );
 
@@ -276,8 +285,6 @@
 					subCurrent = current + 1 > total ? current : current + 1,
 					$( ' .xcy-skip-input', that.$selector ).val( subCurrent );
 				}
-				// page bind event
-				that.options.bindFun.call(this, current );
 
 				return this;
 			},
