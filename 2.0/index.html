@@ -5,11 +5,12 @@
 	<link rel="stylesheet" type="text/css" href="base.css">
 </head>
 <body>
-	<div class="pager_nav" id="stock-pages"></div>
-	<div class="pager_nav" id="stock-pages"></div>
+	<div class="pager_nav" id="stock-pages1"></div>
+	<div class="pager_nav" id="stock-pages1"></div>
 	<input type="button" value="修改第一个分页" id="page-btn1">
-	<div class="pager_nav1" id="stock-pages1"></div>
+	<div class="pager_nav1" id="stock-pages2"></div>
 	<input type="button" value="修改第二个分页" id="page-btn2">
+	<div class="pager_nav2" id="stock-pages3"></div>
 	<script type="text/javascript" src="jquery-1.8.2.min.js"></script>
 	<script type="text/javascript" src="pageinator.js"></script>
 	<script type="text/javascript">
@@ -47,7 +48,7 @@
 	// init pageinator
 	var productPaginator2 = new Paginator({
 		// selector: '#stock-pages',
-		selector: '#stock-pages1',
+		selector: '#stock-pages2',
 		// current: 2,
 		// total: 10,
 		// count: 20,
@@ -78,7 +79,38 @@
 	setTimeout(function(){ 
 		productPaginator2.refresh({current: 2,total: 10,count: 20});
 	}, 100)
-	
+
+	// init pageinator
+	var productPaginator3 = new Paginator({
+		// selector: '#stock-pages',
+		selector: '#stock-pages3',
+		current: 2,
+		total: 10,
+		count: 20,
+		startPage: 1,
+		endPage: 1,
+		numPage: 5,
+		prev: '上一页',
+		next: '下一页',
+		// countShow: true,
+		numShow: false,
+		// totalShow: false,
+		// skipShow: true,
+		// autoLink: true,
+		// arrowShow: false, 	// 是否一直显示上或下一个按钮
+		fastShow: false, 	// 是否一直显示第一或最后按钮
+		autoRefresh: true,
+		bindFun: function( num ){
+			// setTimeout()
+			// this.refresh({
+			// 	current: 2,
+			// 	total: 10,
+			// 	count: 20
+			// })
+			console.log(this)
+			console.log(num)
+		}
+	});
 	</script>
 </body>
 </html>
