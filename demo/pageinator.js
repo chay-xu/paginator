@@ -26,6 +26,7 @@
 			selector: '',		// 容器 container
 			autoRefresh: false,	// 是否自动初始化
 			autoLink: false,	// auto reload page
+			name: 'page',
 			linkTo: function( page ){	// paginator
 				return '#';
 			},
@@ -117,7 +118,7 @@
 
 						$( this ).attr( 'action', opts.linkTo( current ) );
 
-						return bo ? true : bo;
+						return bo ? false : bo;
 					})
 				}
 				
@@ -132,19 +133,20 @@
 					minNumPage = numPage - 1,
 					startNumPage = parseInt( ( numPage - 1 )/2 ),
 					endNumPage = numPage - startNumPage - 1,
+					linkTo = that.options.linkTo,
 					html = '',
 					split = '<span class="xcy-pages-split">...</span>';  
 
 				// first
 				if( current > 1 && opts.fastShow ){
-					html += '<a href="javascript:;" class="xcy-first">'+ opts.first +'</a>';
+					html += '<a href="'+linkTo(current-1)+'" class="xcy-first">'+ opts.first +'</a>';
 				}else if( opts.fastShow !== false ){
 					html += '<span class="xcy-first">'+ opts.first +'</span>';
 				}
 
 				// prev
 				if( current > 1 && opts.arrowShow ){
-					html += '<a href="javascript:;" class="xcy-prev">'+ opts.prev +'</a>';
+					html += '<a href="'+linkTo(1)+'" class="xcy-prev">'+ opts.prev +'</a>';
 				}else if( opts.arrowShow !== false ){
 					html += '<span class="xcy-prev">'+ opts.prev +'</span>';
 				}
@@ -195,14 +197,14 @@
 
 				// next
 				if( current < total  && opts.arrowShow ){
-					html += '<a href="javascript:;" class="xcy-next">'+ opts.next +'</a>';
+					html += '<a href="'+linkTo(current+1)+'" class="xcy-next">'+ opts.next +'</a>';
 				}else if( opts.arrowShow !== false ){
 					html += '<span class="xcy-next">'+ opts.next +'</span>';
 				}
 
 				// last
 				if( current < total && opts.fastShow ){
-					html += '<a href="javascript:;" class="xcy-last">'+ opts.last +'</a>';
+					html += '<a href="'+linkTo(total)+'" class="xcy-last">'+ opts.last +'</a>';
 				}else if( opts.fastShow !== false ){
 					html += '<span class="xcy-last">'+ opts.last +'</span>';
 				}
@@ -231,8 +233,8 @@
 					html = '';
 
 				// skip
-				html += '<div class="xcy-pages-skip"><form id="xcy-pages-form" class="xcy-pages-form" action="">';
-				html += '<label>去第</label><input type="text" class="xcy-skip-input" name="xcy-page" size="3" value=\"'+ current +'\"><span>页</span>';
+				html += '<div class="xcy-pages-skip"><form id="xcy-pages-form" class="xcy-pages-form" method="get" action="">';
+				html += '<label>去第</label><input type="text" class="xcy-skip-input" name="'+that.options.name+'" size="3" value=\"'+ current +'\"><span>页</span>';
 				html += '<input type="submit" class="xcy-skip-button" value="确 定"><form></div>';
 
 				return html;
