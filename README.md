@@ -2,7 +2,7 @@ paginator
 ## 简要
 Paginator一款可自由配置的jquery分页插件，可自定义样式。
 
-see demo [Paginator](http://xu8511831.github.io/demo/rMenu/index.html)
+see demo [Paginator](http://xu8511831.github.io/demo/paginator/index.html)
 
 ## API
 直接调用Paginator即可
