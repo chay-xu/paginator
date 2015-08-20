@@ -7,7 +7,7 @@ see demo [Paginator](http://xu8511831.github.io/demo/paginator/index.html)
 ## API
 直接调用Paginator即可
 ```js
-    var pageination = new Paginator({
+var pageination = new Paginator({
 	current: 0, 		// 当前页
 	total: 0, 		// 总页数
 	count: 0, 		// 总条数
@@ -32,7 +32,7 @@ see demo [Paginator](http://xu8511831.github.io/demo/paginator/index.html)
 		return '#';
 	},
 	bindFun: function(){}
-    })
+})
 ```
 ## 方法
 异步时可以调用重新渲染
