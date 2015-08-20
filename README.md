@@ -38,8 +38,8 @@ var pageination = new Paginator({
 异步时可以调用重新渲染
 pageination.refresh({current:3,total:5,count:6});
 
-## 特点
-分页插件常用的2种写法
+## 优缺点比较
+异步分页插件常用的2种写法
 
 #### 一、是把ajax封装到插件内部，通过配置ajax参数完成数据请求
 ```js
