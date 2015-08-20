@@ -1,6 +1,9 @@
 paginator
 ## 简要
 Paginator一款可自由配置的jquery分页插件，可自定义样式。
+* 支持ajax分页和url跳转，便捷的refresh分页
+* 任意的分页样式配置
+* 任意页码段数显示
 
 see demo [Paginator](http://xu8511831.github.io/demo/paginator/index.html)
 
@@ -94,6 +97,7 @@ function init( data ){
 Paginator代码实现
 ```js
 var pageObj = new Paginator({
+	// autoRefresh为true自动调用bindFun
 	autoRefresh: true,
 	bindFun: function( page ){
 		ajaxRequest( page )
