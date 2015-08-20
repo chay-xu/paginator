@@ -89,6 +89,30 @@ function init( data ){
 
 **一、参数无法自定义，数据请求过程不可控**
 
-**二、逻辑有点复杂，还要判断初始化**
+**二、逻辑有点复杂，需要判断是否初始化**
 
+Paginator代码实现
+```js
+var pageObj = new Paginator({
+	autoRefresh: true,
+	bindFun: function( page ){
+		ajaxRequest( page )
+	}
+})
+
+// ajax请求函数
+function ajaxRequest( page ){
+	$.ajax({
+		type: 'POST',
+		url: url ,
+		data: {
+			page: page
+		},
+		success: function( data ){
+			pageObj.refresh({current: data.current, total: data.total, count: data.count});
+			// show data...
+		}
+	});
+}
+```
 待更新...
