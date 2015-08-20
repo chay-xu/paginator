@@ -6,9 +6,9 @@ see demo [Paginator](http://xu8511831.github.io/demo/paginator/index.html)
 
 ## API
 直接调用Paginator即可
-
+```js
     var pageination = new Paginator({
-    	current: 0, 		// 当前页
+	current: 0, 		// 当前页
 	total: 0, 		// 总页数
 	count: 0, 		// 总条数
 	startPage: 2, 		// 开始显示条数 head page
@@ -33,12 +33,13 @@ see demo [Paginator](http://xu8511831.github.io/demo/paginator/index.html)
 	},
 	bindFun: function(){}
     })
+```
 ## 方法
 异步时可以调用重新渲染
 pageination.refresh({current:3,total:5,count:6});
 
 ## 特点
-大部分插件2种方法
+分页插件常用的2种写法
 
 #### 一、是把ajax封装到插件内部，通过配置ajax参数完成数据请求
 ```js
