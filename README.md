@@ -68,7 +68,7 @@ function ajaxRequest( page ){
 			page: 1
 		},
 		success: function( data ){
-			// 判断是否是第一次请求
+			// 判断是否是第一次请求，初始化pagination
 			if( data.page == 1 ){
 				init( data )
 			}
