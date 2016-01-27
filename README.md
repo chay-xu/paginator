@@ -41,7 +41,9 @@ var pageination = new Paginator({
 ```
 ## 方法
 异步时可以调用重新渲染
+```js
 pageination.refresh({current:3,total:5,count:6});
+```
 
 ## 优缺点比较
 异步分页插件常用的2种写法
