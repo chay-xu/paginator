@@ -58,10 +58,19 @@
 					html;
 
 				html = '<div class="xcy-pages-warp">';
+				// 分页段
 				html += '<div class="xcy-pages-num">';
-				html += that._drawLink( current, total );
+				if( total > 0 ){
+					html += that._drawLink( current, total );
+				}
 				html += '</div>';
-				html += that._drawCount( current, total, count );
+				// 总页段
+				html += '<div class="xcy-pages-count">';
+				if( total > 0 ){
+					html += that._drawCount( current, total, count );
+				}
+				html += '</div>';
+
 				if( skipShow ){
 					html += that._drawSkip( current );
 				}
@@ -214,15 +223,12 @@
 			_drawCount: function( current, total, count ){
 				var html = '';
 
-				html += '<div class="xcy-pages-count">';
 				// total
 				if( this.options.totalShow )
 					html += '<b>'+ current +'/' + total + '</b><span>页</span>';
 				// count
 				if( this.options.countShow )
 					html += ' <span>共</span>'+ count +'条';
-
-				html += '</div>';
 
 				return html;
 			},
@@ -281,7 +287,7 @@
 
 				$( '.xcy-pages-num', that.$selector ).html( that._drawLink( current, total ) );
 
-				$( '.xcy-pages-count', that.$selector ).replaceWith( that._drawCount( current, total, count ) );
+				$( '.xcy-pages-count', that.$selector ).html( that._drawCount( current, total, count ) );
 
 				if( skipShow ){
 					subCurrent = current + 1 > total ? current : current + 1,
