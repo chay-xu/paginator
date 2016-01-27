@@ -39,7 +39,11 @@
 		autoRefresh: false,
 		bindFun: function( num, total, count ){
 			console.log( num, total, count )
-			this.refresh({current: num});
+			if( num <= total){
+				this.refresh({current: num});
+			}else{
+				alert('no well')
+			}
 		}
 	});
 	$( '#page-btn1' ).click(function(){
@@ -66,7 +70,7 @@
 		// arrowShow: false, 	// 是否一直显示上或下一个按钮
 		fastShow: false, 	// 是否一直显示第一或最后按钮
 		autoRefresh: true,
-		bindFun: function( num ){
+		bindFun: function( current, total, count ){
 			// setTimeout()
 			// this.refresh({
 			// 	current: 2,
@@ -74,14 +78,14 @@
 			// 	count: 20
 			// })
 			console.log(this)
-			console.log(num)
+			console.log(current, total, count)
 		}
 	});
 	$( '#page-btn2' ).click(function(){
 		productPaginator2.refresh({current:3,total:5,count:6});
 	})
 	setTimeout(function(){ 
-		productPaginator2.refresh({current: 2,total: 10,count: 20});
+		productPaginator2.refresh({current: 1,total: 10,count: 20});
 	}, 800)
 
 	// init pageinator 3、同步的分页

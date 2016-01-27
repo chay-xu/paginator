@@ -37,8 +37,11 @@
 			var that = this;
 
 			that.options = $.extend({}, Default, options || {});
+			// that.options = $.extend({}, Default);
 
 			that.$selector = typeof options.selector === 'string' ? $( options.selector ) : options.selector;
+
+			that.isRender = false;
 
 			// 自动初始化
 			// if( that.autoInit )
@@ -46,29 +49,38 @@
 		}
 		
 		pagination.prototype = {
+			constructor: pagination,
 			version: '2.0',
 			_init: function(){
 				var that = this,
 					opts = that.options,
-					autoLink = opts.autoLink,
-					skipShow = opts.skipShow,
 					total = Number( opts.total ),
 					current = Number( opts.current ),
-					count = Number( opts.count ),
-					html;
+					count = Number( opts.count );
+
+				// if( total > 0 ){
+				// 	that._drawWarp( current, total, count );
+					that.refresh();
+				// }
+			},
+			_drawWarp: function( current, total, count ){
+				var that = this,
+					opts = that.options,
+					skipShow = opts.skipShow,
+					html = '';
 
 				html = '<div class="xcy-pages-warp">';
 				// 分页段
 				html += '<div class="xcy-pages-num">';
-				if( total > 0 ){
+				// if( total > 0 ){
 					html += that._drawLink( current, total );
-				}
+				// }
 				html += '</div>';
 				// 总页段
 				html += '<div class="xcy-pages-count">';
-				if( total > 0 ){
+				// if( total > 0 ){
 					html += that._drawCount( current, total, count );
-				}
+				// }
 				html += '</div>';
 
 				if( skipShow ){
@@ -78,59 +90,8 @@
 
 				// render dom html
 				that.$selector.html( html );
-				// paginator event
-				if( !autoLink ){
-					// ajax
-					// 异步加载
-					$( '.xcy-pages-warp', that.$selector ).delegate( 'a', 'click', function( e ){
-						var className = $( this ).attr( 'class' ),
-							current = opts.current;
 
-						if( className == 'xcy-next' ){
-							current++;
-						}else if( className == 'xcy-prev' ){
-							current--;
-						}else if( className == 'xcy-first' ){
-							current = 1;
-						}else if( className == 'xcy-last' ){
-							current = opts.total;
-						}else{
-							current = Number( $( this ).attr( 'sh-page' ) );
-						}
-
-						that._handle( current, opts.total, opts.count )
-
-						return false;
-					})
-					// skip form submit
-					// submit button 异步加载
-					if( skipShow ){
-						$( '.xcy-pages-form', that.$selector ).bind( 'submit', function(){
-							current = $( '.xcy-skip-input', that.$selector ).val();
-
-							that._handle( current, opts.total, opts.count )
-
-							return false;
-						})
-					}
-				}else{
-					// form submit
-					// submit button 同步加载
-					$( '.xcy-pages-form', that.$selector ).bind( 'submit', function(){
-						var bo;
-
-						current = $( '.xcy-skip-input', that.$selector ).val();
-
-						if( current > total ) return false;
-						// return submit boolen
-						bo = opts.bindFun( current );
-
-						$( this ).attr( 'action', opts.linkTo( current ) );
-
-						return bo ? false : bo;
-					})
-				}
-				
+				that._bindEvent( current, total, count, skipShow );
 			},
 			_drawLink: function( current, total ){
 				var that = this,
@@ -261,6 +222,64 @@
 
 				return html;
 			},
+			_bindEvent: function( current, total, count, skipShow ){
+				var that = this,
+					opts = that.options,
+					autoLink = opts.autoLink;
+
+				// paginator event
+				if( !autoLink ){
+					// ajax
+					// 异步加载
+					$( '.xcy-pages-warp', that.$selector ).delegate( 'a', 'click', function( e ){
+						var className = $( this ).attr( 'class' ),
+							current = opts.current;
+
+						if( className == 'xcy-next' ){
+							current++;
+						}else if( className == 'xcy-prev' ){
+							current--;
+						}else if( className == 'xcy-first' ){
+							current = 1;
+						}else if( className == 'xcy-last' ){
+							current = opts.total;
+						}else{
+							current = Number( $( this ).attr( 'sh-page' ) );
+						}
+
+						that._handle( current, opts.total, opts.count )
+
+						return false;
+					})
+					// skip form submit
+					// submit button 异步加载
+					if( skipShow ){
+						$( '.xcy-pages-form', that.$selector ).bind( 'submit', function(){
+							current = $( '.xcy-skip-input', that.$selector ).val();
+
+							that._handle( current, opts.total, opts.count )
+
+							return false;
+						})
+					}
+				}else{
+					// form submit
+					// submit button 同步加载
+					$( '.xcy-pages-form', that.$selector ).bind( 'submit', function(){
+						var bo;
+
+						current = $( '.xcy-skip-input', that.$selector ).val();
+
+						if( current > total ) return false;
+						// return submit boolen
+						bo = opts.bindFun( current );
+
+						$( this ).attr( 'action', opts.linkTo( current ) );
+
+						return bo ? false : bo;
+					})
+				}
+			},
 			_handle: function( current, total, count ){
 				var that = this,
 					opts = that.options;
@@ -284,16 +303,22 @@
 				current = Number( opts.current );
 				total = Number( opts.total );
 				count = Number( opts.count );
-
-				$( '.xcy-pages-num', that.$selector ).html( that._drawLink( current, total ) );
-
-				$( '.xcy-pages-count', that.$selector ).html( that._drawCount( current, total, count ) );
-
-				if( skipShow ){
-					subCurrent = current + 1 > total ? current : current + 1,
-					$( ' .xcy-skip-input', that.$selector ).val( subCurrent );
+				
+				if( total > 0 && !that.isRender ){
+					// 渲染容器dom
+					that._drawWarp( current, total, count );
+					that.isRender = true;
+				}else{
+					// 分页码
+					$( '.xcy-pages-num', that.$selector ).html( that._drawLink( current, total ) );
+					// 总页码
+					$( '.xcy-pages-count', that.$selector ).html( that._drawCount( current, total, count ) );
+					// 跳转
+					if( skipShow ){
+						subCurrent = current + 1 > total ? current : current + 1,
+						$( ' .xcy-skip-input', that.$selector ).val( subCurrent );
+					}
 				}
-
 				return this;
 			},
 			destroy: function(){
