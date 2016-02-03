@@ -63,6 +63,9 @@
 .xcy-pages-count{
 	padding: 0 8px;
 }
+.xcy-pages-number{
+	margin-right: 5px;
+}
 .xcy-pages-skip form{
 	vertical-align: middle;
 	float: left;

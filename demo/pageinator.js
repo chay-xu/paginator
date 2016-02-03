@@ -186,10 +186,10 @@
 
 				// total
 				if( this.options.totalShow )
-					html += '<b>'+ current +'/' + total + '</b><span>页</span>';
+					html += '<span class="xcy-pages-number"><b>'+ current +'/' + total + '</b>页</span>';
 				// count
 				if( this.options.countShow )
-					html += ' <span>共</span>'+ count +'条';
+					html += '<span>共<span>'+ count +'</span>条</span>';
 
 				return html;
 			},
